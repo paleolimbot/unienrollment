@@ -4,17 +4,18 @@
 \name{enrollment}
 \alias{enrollment}
 \title{Canadian University Enrollment}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 100786 rows and 9 columns.}
+\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 2760 rows and 5 columns.}
 \source{
-Table: 37-10-0011-01 (formerly: CANSIM 477-0029)
+Statistics Canada. Table 37-10-0011-01: Postsecondary enrolments,
+by program type, credential type, Classification of Instructional Programs,
+Primary Grouping (CIP_PG), registration status and sex.
 \url{https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3710001101}
 }
 \usage{
 enrollment
 }
 \description{
-Canadian University Enrollment by year, province,
-program type, credential type, program class, regustration status,
-and gender.
+Canadian University Enrollment by year, province, program type, credential
+type, program class, regustration status, and gender.
 }
 \keyword{datasets}

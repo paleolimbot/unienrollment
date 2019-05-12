@@ -18,6 +18,7 @@ library(tidyverse)
 enrollment_raw <- read_csv("data-raw/37100011.csv")
 
 enrollment_all <- enrollment_raw %>%
+  distinct() %>%
   separate(REF_DATE, c("year", "end_year"), convert = TRUE) %>%
   select(
     year,
@@ -33,19 +34,41 @@ enrollment_all <- enrollment_raw %>%
 
 enrollment <- enrollment_all %>%
   filter(
-    province != "Canada",
-    !str_detect(inst_type, "Total"),
     !str_detect(prog_type, "Total"),
     !str_detect(cred_type, "Total"),
     !str_detect(program_class, "Total"),
-    !str_detect(reg_status, "Total"),
-    !str_detect(gender, "Total")
+    !str_detect(gender, "Total"),
+
+    # some values
+    str_detect(cred_type, "[Dd]egree"),
+    prog_type != "Non-program (credit, undergraduate)",
+
+    # one value
+    province == "Canada",
+    str_detect(reg_status, "Total"),
+    str_detect(inst_type, "Total"),
   ) %>%
+  select(-province, -reg_status, -inst_type) %>%
+  # recoding the values in prog_type, cred_type to match income$degree_type
   mutate(
-    reg_status = str_remove(reg_status, "\\s*student"),
+    degree_type = prog_type %>%
+      fct_recode(
+        "Doctoral" = "Graduate program (third cycle)",
+        "Master's" = "Graduate program (second cycle)",
+        "Undergraduate" = "Undergraduate program",
+        "Professional" = "Post-baccalaureate non-graduate program",
+        "Professional" = "Health-related residency program",
+        "Professional" = "Other programs"
+      ) %>%
+      as.character() %>%
+      if_else(cred_type == "Associate degree", "Associate", .),
     gender = str_replace(gender, "Sex unknown", "Unknown")
   ) %>%
-  filter(!is.na(n_students))
+  filter(!is.na(n_students)) %>%
+  # this completes the "degree_type" recode, ditching prog_type and cred_type
+  group_by(year, degree_type, program_class, gender) %>%
+  summarise(n_students = sum(n_students)) %>%
+  ungroup()
 
 # list.files("data-raw", "^37100011", full.names = TRUE) %>% unlink()
 

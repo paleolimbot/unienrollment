@@ -8,7 +8,7 @@ library(tidyverse)
 # Table: 37-10-0115-01
 # https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3710011501
 
-# # this is a 10 MB download
+# this is a 10 MB download
 # curl::curl_download(
 #   "https://www150.statcan.gc.ca/n1/tbl/csv/37100115-eng.zip",
 #   "data-raw/37100115-eng.zip"
@@ -21,10 +21,10 @@ income_all <- income_raw %>%
   select(-VECTOR, -COORDINATE) %>%
   distinct() %>%
   select(
-    graduate_year = REF_DATE,
+    year = REF_DATE,
     province = GEO,
-    cred_type = `Educational qualification`,
-    field = `Field of study`,
+    degree_type = `Educational qualification`,
+    program_class = `Field of study`,
     gender = Sex,
     age_group = `Age group`,
     immigration_status = `Student status in Canada`,
@@ -36,8 +36,8 @@ income_all <- income_raw %>%
 income <- income_all %>%
   filter(
     # no totals for these
-    !str_detect(cred_type, "^Total"),
-    !str_detect(field, "^Total"),
+    !str_detect(degree_type, "^Total"),
+    !str_detect(program_class, "^Total"),
     !str_detect(gender, "^Total"),
 
     # only one value for these
@@ -59,9 +59,13 @@ income <- income_all %>%
   filter(
     # further restrictions
     n_students > 15,
-    str_detect(cred_type, "degree")
+    str_detect(degree_type, "degree")
   ) %>%
-  mutate(cred_type = str_remove(cred_type, "\\s*degree$"))
+  mutate(
+    degree_type = degree_type %>%
+      str_remove("\\s*degree$") %>%
+      str_replace("Undergraduate associate", "Associate")
+  )
 
 # list.files("data-raw", "^37100115", full.names = TRUE) %>% unlink()
 
