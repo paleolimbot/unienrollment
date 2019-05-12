@@ -1,0 +1,53 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+library(tibble)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# unienrollment
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of unienrollment is to provide an engaging dataset for University professors and administrators who are learning R, the [tidyverse](http://tidyverse.org), and [ggplot2](http://ggplot2.tidyverse.org/). The package contains two datasets: `enrollment` and `income`. Both are derived from Statistics Canada data products that rely on the [Postsecondary Student Information System (PSIS)](http://www23.statcan.gc.ca/imdb/p2SV.pl?Function=getSurvey&SDDS=5017).
+
+## Installation
+
+You can install the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("paleolimbot/unienrollment")
+```
+
+If you can load the package, you're all set!
+
+```{r}
+library(unienrollment)
+```
+
+## Canadian postsecondary enrollment
+
+The `enrollment` dataset contains counts of the number of students enrolled in Canada with a given degree type and program class. The dataset is also divided by year and gender. Each row represents a cohort of students who share an enrollment year, a degree type, a program class, and a gender.
+
+```{r enrollment}
+enrollment
+```
+
+## Employment income of postsecondary graduates
+
+The `income` dataset contains the median empoyment income of postsecondary students who graduated in 2010 and 2011 after 2 years and 5 years. Each row represents a cohort of students who share a graduation year, a degree type, a program class, and a gender.
+
+```{r income}
+income
+```
